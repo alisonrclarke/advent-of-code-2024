@@ -54,3 +54,14 @@ python day07.py test 2
  * `input_as_ints` returns a list where each line in the input file is an element of the list, converted into an integer
 
 
+## Formatting on commit
+
+`pre-commit-config.yaml` defines a pre-commit hook to run `black` before committing.
+
+To set this up:
+
+```[bash]
+pip install pre-commit
+pre-commit install
+```
+
