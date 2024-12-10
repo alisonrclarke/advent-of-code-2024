@@ -65,6 +65,10 @@ indices = reversed(files_map.keys())
 for i in indices:
     block_len = data[i * 2]
     for j, s in enumerate(spaces_map):
+        # If the space is further right than the file, we can't carry on
+        if s[0] > files_map[i][0]:
+            break
+
         if s[1] - s[0] >= block_len:
             prev_idx = j // 2
             files_map[i] = (s[0], s[0] + block_len)
