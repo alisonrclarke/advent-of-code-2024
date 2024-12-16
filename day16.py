@@ -3,6 +3,9 @@ import sys
 
 import utils
 
+# It's that time of year...
+sys.setrecursionlimit(2000)
+
 test_mode = len(sys.argv) > 1
 if test_mode:
     suffix = sys.argv[2] if len(sys.argv) > 2 else ""
@@ -15,6 +18,7 @@ grid = utils.input_as_lines(input_file)
 # Find start and end positions
 start_pos = None
 end_pos = None
+
 
 for j, row in enumerate(grid):
     for i, c in enumerate(row):
@@ -30,14 +34,15 @@ shortest_path_cache = {}
 
 
 def shortest_path(pos1, pos2, step, visited):
-    print("shortest_path", pos1, pos2, step, visited)
+    # print("shortest_path", pos1, pos2, step, visited)
 
-    if (pos1, pos2, step) in shortest_path_cache:
+    cache_key = (pos1, pos2, step)
+    if cache_key in shortest_path_cache:
         print("cache hit")
-        return shortest_path_cache[(pos1, pos2, step)]
+        return shortest_path_cache[cache_key]
 
     if pos1 + step == pos2:
-        shortest_path_cache[(pos1, pos2)] = 1
+        shortest_path_cache[cache_key] = 1
         return 1
     else:
         possible_scores = []
@@ -48,10 +53,10 @@ def shortest_path(pos1, pos2, step, visited):
             and grid[int(next_pos.imag)][int(next_pos.real)] == "."
         ):
             possible_scores.append(
-                shortest_path(pos1 + step, pos2, step, visited + [pos1])
+                1 + shortest_path(pos1 + step, pos2, step, visited + [pos1])
             )
 
-        for s in [step, step * 1j, step * -1j]:
+        for s in [step * 1j, step * -1j]:
             if pos1 + s == pos2:
                 possible_scores += 1001
 
@@ -61,7 +66,7 @@ def shortest_path(pos1, pos2, step, visited):
                 and grid[int(next_pos.imag)][int(next_pos.real)] == "."
             ):
                 possible_scores.append(
-                    1000 + shortest_path(pos1 + s, pos2, s, visited + [pos1])
+                    1001 + shortest_path(pos1 + s, pos2, s, visited + [pos1])
                 )
 
         if possible_scores:
@@ -69,11 +74,11 @@ def shortest_path(pos1, pos2, step, visited):
         else:
             score = sys.maxsize
 
-        shortest_path_cache[(pos1, pos2, step)] = score
-        if pos1 == start_pos and pos2 == end_pos:
-            breakpoint()
+        shortest_path_cache[cache_key] = score
         return score
 
 
 part1 = shortest_path(start_pos, end_pos, 1, [])
-print(part1)
+print(f"Part 1: {part1}")
+
+# Answer too high (338120)
