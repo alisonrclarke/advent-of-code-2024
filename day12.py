@@ -148,6 +148,14 @@ for plant, region in regions:
                 found = False
                 for edge in edges:
                     if edge.is_continuation(edge_pos, direction):
+                        # Need an extra check here that it's not just a diagonal relationship
+                        # e.g. A|B
+                        #      -+-
+                        #      B|A
+                        # Just check in region?
+                        if edge_pos == (3 + 3j):
+                            breakpoint()
+                        print(f"Adding {edge_pos} to {edge}")
                         edge.add_pos(edge_pos)
                         found = True
                         break
@@ -155,7 +163,12 @@ for plant, region in regions:
                 if not found:
                     edges.append(Edge(edge_pos, direction, 1))
 
-    # print(plant, len(region), len(edges))
+    print("******")
+    print(plant, len(region), len(edges))
+    for edge in edges:
+        print(edge)
+    print("******")
+
     total += len(region) * len(edges)
 
 print(f"Part 1: {total}")
